@@ -34,6 +34,12 @@ public class AWSHandlerTest {
         System.out.println(objectNames);
     }
 
+    @Test
+    public void listCommonPrefixes() {
+        List<String> prefixes =  AWSHandler.getObjectsListWithPrefix(BUCKET_NAME, "test1/test2");
+        System.out.println(prefixes);
+    }
+
 
     @Test
     public void uploadAndGetFile() throws IOException {
