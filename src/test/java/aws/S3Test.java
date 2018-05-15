@@ -20,8 +20,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -77,11 +79,15 @@ public class S3Test {
         log.debug("write1 finished at {}", new Date());
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ExecutionException, InterruptedException {
         setUpClass();
 
         ExecutorService executorService = Executors.newFixedThreadPool(2);
-        executorService.submit(() -> write0());
-        executorService.submit(() -> write1());
+        Future<?> f0 = executorService.submit(S3Test::write0);
+        Future<?> f1 = executorService.submit(S3Test::write1);
+
+        f0.get();
+        f1.get();
+
     }
 }
